@@ -1,17 +1,12 @@
 
-#####################################################
-#                                                   #
-#           Installation System - Tenaris           #
-#           Author: @robtzcraft                     #
-#           Version: 0.0.5 (alpha)                  #
-#                                                   #
-#####################################################
-
-<# Title: PowerShell Menu Template | Author: Michael Casey | Date: July 3rd, 2019 | Website: https://michael-casey.com/ #>
+Import-Module -Path ".\powershell-modules\bluetooth-disable.psm1"
+Import-Module -Path ".\powershell-modules\bitlocker-disable.psm1"
+Import-Module -Path ".\powershell-modules\language-config.psm1"
+Import-Module -Path ".\powershell-modules\write-highlighted.psm1"
  
 #Sample list data to populate menu:
 #Set $List to any array to populate the menu with custom options
-$List = "Software Center Check", "Config Sequence"
+$List = "Software Center Check", "Config Sequence", "Exit"
  
 #menu offset to allow space to write a message above the menu
 $xmin = 3
@@ -108,39 +103,6 @@ function Show-Menu {
 #####################################################
     "
 
-}
-
-function Disable-BitLocker {
-    $DriveLetter = "C"
-
-    # Bitlocker Status
-    $status = Get-BitLockerVolume -MountPoint $DriveLetter
-
-    if ($status.VolumeStatus -eq 'FullyEncrypted') {
-        Disable-BitLocker -MountPoint $DriveLetter
-        Write-Host "BitLocer inactive: $DriveLetter."
-    }
-    else {
-        Write-Host "BitLocker is not active: $DriveLetter."
-    }
-}
-
-function Disable-Bluetooth {
-  # Obtiene el estado actual del Bluetooth
-  $state = Get-WmiObject -Class Win32_BluetoothRadio -Namespace root\cimv2\wirelesslan
-
-  # Verifica si el Bluetooth está activado
-  if ($state.Enabled) {
-    # Desactiva el Bluetooth
-    $state.Enabled = $false
-    $state.SetProperty()
-
-    # Imprime un mensaje de confirmación
-    Write-Host "El Bluetooth se ha deshabilitado."
-  } else {
-    # Imprime un mensaje de advertencia
-    Write-Host "El Bluetooth ya está deshabilitado."
-  }
 }
 
 do {
