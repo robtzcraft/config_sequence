@@ -1,8 +1,9 @@
 
-Import-Module -Path ".\powershell-modules\bluetooth-disable.psm1"
-Import-Module -Path ".\powershell-modules\bitlocker-disable.psm1"
-Import-Module -Path ".\powershell-modules\language-config.psm1"
-Import-Module -Path ".\powershell-modules\write-highlighted.psm1"
+$parent_dir = Split-Path $MyInvocation.MyCommand.Path
+
+Import-Module .\powershell_modules\bluetooth_disable.psm1
+Import-Module .\powershell_modules\bitlocker_disable.psm1
+Import-Module .\powershell_modules\language_config.psm1
  
 #Sample list data to populate menu:
 #Set $List to any array to populate the menu with custom options
@@ -76,15 +77,8 @@ while ($menu_active) {
 }
 
 Clear-Host
-Write-Host $selection
+# Write-Host $selection
 #May use switch statement here to process menu selection
-
-
-
-
-
-
-
 
 function Show-Menu {
     param (
@@ -106,12 +100,10 @@ function Show-Menu {
 }
 
 do {
-    Show-Menu
-    $input = Read-Host ">>>"
     $PSScriptRoot = Split-Path -Path $MyInvocation.MyCommand.Path
     $os = Get-WmiObject -Class Win32_ComputerSystem | Select-Object -Property Manufacturer 
-    switch ($input) {
-        'config_sequence_start' {
+    switch ($selection) {
+        'Config Sequence' {
                  
             <# 
                 BitLocker Disable Sequence
@@ -119,45 +111,46 @@ do {
                 Shared Folder
                 Desktop Links
             #>
-            try { Disable-BitLocker } catch { "Error during BitLocker Disable Procedure... $($_.Exception.Message)" }
+#            Test
+            try { Disable-Bluetooth } catch { "Error during BitLocker Disable Procedure... $($_.Exception.Message)" }
             try { Disable-Bluetooth } catch { "Error during Bluetooth Disable Procedure... $($_.Exception.Message)" }
-            try { Copy-Item -Path "$PSScriptRoot\03.-Shared\Shared" -Destination D:\ -Recurse -Force } catch { "$($_.Exception.Message)" }
-            try {
-                Copy-Item -Path "$PSScriptRoot\01-SWBase\CheckList Gruas.url" -Destination C:\Users\Public\Desktop
-                Copy-Item -Path "$PSScriptRoot\01-SWBase\Tenaris Shop Floor.url" -Destination C:\Users\Public\Desktop
-                Copy-Item -Path "$PSScriptRoot\01-SWBase\Nombre Completo de PC.bat" -Destination C:\Users\Public\Desktop
-                Copy-Item -Path "$PSScriptRoot\01-SWBase\Correo Web On Premise.url" -Destination C:\Users\Public\Desktop
-                Copy-Item -Path "$PSScriptRoot\01-SWBase\Office Web Cloud.url" -Destination C:\Users\Public\Desktop
-                Copy-Item -Path "$PSScriptRoot\01-SWBase\Integrated Document Management.lnk" -Destination C:\Users\Public\Desktop
-            } catch { "$($_.Exception.Message)" }
-
-            <# Application Installation Sequence #>
-            Start-Process "$PSScriptRoot\02-Install\01-Administrador de impresora\admin impresora.bat" -Wait
-            Start-Process "$PSScriptRoot\02-Install\03-AutoDesk_DWG2021\Setup.exe" -Wait
-            Start-Process "$PSScriptRoot\02-Install\04-Chrome\ChromeSetup.exe" -Wait
-            if ($os -like "*Dell Inc.*") {
-                Start-Process "$PSScriptRoot\02-Install\05-Dell-Command-Update\Dell-Command-Update-Application_714J9_WIN_4.8.0_A00.EXE" -Wait
-                Start-Sleep -Seconds 10
-                Start-Process "C:\Program Files (x86)\Dell\CommandUpdate\DellCommandUpdate.exe" -Wait
-            }
-            Start-Process "$PSScriptRoot\02-Install\06-SAP Installer\SAPGUi770_SP8_20220921_1358.exe" -Wait
-
-            <# Language Configuration Sequence #>
-            Set-TimeZone -Id "Central Standard Time (Mexico)"
-            Set-Culture es-MX
-            Set-Culture -CultureInfo es-MX
-            Set-WinSystemLocale -SystemLocale es-MX
-            Set-WinUILanguageOverride -Language es-ES
-            Set-WinUserLanguageList es-ES -Force
-            Get-WinHomeLocation
-            Set-WinHomeLocation -GeoId 166
-            Get-WinHomeLocation
-            
-            Write-Host "Automated Process Finished... It's necesary to restart..."
-            $input_3 = Read-Host "Restart? [y/n]"
-            if ($input_3 -eq 'y'){
-                shutdown -r
-            }
+#            try { Copy-Item -Path "$PSScriptRoot\03.-Shared\Shared" -Destination D:\ -Recurse -Force } catch { "$($_.Exception.Message)" }
+#            try {
+#                Copy-Item -Path "$PSScriptRoot\01-SWBase\CheckList Gruas.url" -Destination C:\Users\Public\Desktop
+#                Copy-Item -Path "$PSScriptRoot\01-SWBase\Tenaris Shop Floor.url" -Destination C:\Users\Public\Desktop
+#                Copy-Item -Path "$PSScriptRoot\01-SWBase\Nombre Completo de PC.bat" -Destination C:\Users\Public\Desktop
+#                Copy-Item -Path "$PSScriptRoot\01-SWBase\Correo Web On Premise.url" -Destination C:\Users\Public\Desktop
+#                Copy-Item -Path "$PSScriptRoot\01-SWBase\Office Web Cloud.url" -Destination C:\Users\Public\Desktop
+#                Copy-Item -Path "$PSScriptRoot\01-SWBase\Integrated Document Management.lnk" -Destination C:\Users\Public\Desktop
+#            } catch { "$($_.Exception.Message)" }
+#
+#            <# Application Installation Sequence #>
+#            Start-Process "$PSScriptRoot\02-Install\01-Administrador de impresora\admin impresora.bat" -Wait
+#            Start-Process "$PSScriptRoot\02-Install\03-AutoDesk_DWG2021\Setup.exe" -Wait
+#            Start-Process "$PSScriptRoot\02-Install\04-Chrome\ChromeSetup.exe" -Wait
+#            if ($os -like "*Dell Inc.*") {
+#                Start-Process "$PSScriptRoot\02-Install\05-Dell-Command-Update\Dell-Command-Update-Application_714J9_WIN_4.8.0_A00.EXE" -Wait
+#                Start-Sleep -Seconds 10
+#                Start-Process "C:\Program Files (x86)\Dell\CommandUpdate\DellCommandUpdate.exe" -Wait
+#            }
+#            Start-Process "$PSScriptRoot\02-Install\06-SAP Installer\SAPGUi770_SP8_20220921_1358.exe" -Wait
+#
+#            <# Language Configuration Sequence #>
+#            Set-TimeZone -Id "Central Standard Time (Mexico)"
+#            Set-Culture es-MX
+#            Set-Culture -CultureInfo es-MX
+#            Set-WinSystemLocale -SystemLocale es-MX
+#            Set-WinUILanguageOverride -Language es-ES
+#            Set-WinUserLanguageList es-ES -Force
+#            Get-WinHomeLocation
+#            Set-WinHomeLocation -GeoId 166
+#            Get-WinHomeLocation
+#            
+#            Write-Host "Automated Process Finished... It's necesary to restart..."
+#            $input_3 = Read-Host "Restart? [y/n]"
+#            if ($input_3 -eq 'y'){
+#                shutdown -r
+#            }
         }
         'sc_check' {
             Write-Host "Software Center Repair Sequence..."

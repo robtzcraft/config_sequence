@@ -13,3 +13,5 @@ function Disable-BitLocker {
         Write-Host "BitLocker is not active: $DriveLetter."
     }
 }
+
+Export-ModuleMember -Function Disable-BitLocker
