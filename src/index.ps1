@@ -1,4 +1,11 @@
 
+# Programa de Instalación
+
+# [string]$sourceDirectory = "\\tnsafs02.tenaris.techint.net\Packages\Global Applications\MS_Infopath_2013"
+# [string]$destionationDirectory = "D:\Shared\"
+#
+# Copy-Item -Force -Recurse -Verbose $sourceDirectory -Destination $destinationDirectory
+
 $List = "Software Center Check", "Config Sequence", "Exit"
 
 $xmin = 3
@@ -63,13 +70,6 @@ while ($menu_active) {
     Start-Sleep -Milliseconds 5 #Prevents CPU usage from spiking while looping
 }
 
-pause
-
-
-
-
-
-
 
 
 
@@ -88,10 +88,10 @@ pause
 
 # $parent_dir = Split-Path $MyInvocation.MyCommand.Path
 
-Import-Module .\powershell_modules\ui.psm1
-Import-Module .\powershell_modules\bluetooth_disable.psm1
-Import-Module .\powershell_modules\bitlocker_disable.psm1
-Import-Module .\powershell_modules\language_config.psm1
+#Import-Module .\powershell_modules\ui.psm1
+#Import-Module .\powershell_modules\bluetooth_disable.psm1
+#Import-Module .\powershell_modules\bitlocker_disable.psm1
+#Import-Module .\powershell_modules\language_config.psm1
 
 function Show-Menu {
     param (
@@ -125,8 +125,9 @@ do {
                 Desktop Links
             #>
 #            Test
-            try { Disable-Bluetooth } catch { "Error during BitLocker Disable Procedure... $($_.Exception.Message)" }
-            try { Disable-Bluetooth } catch { "Error during Bluetooth Disable Procedure... $($_.Exception.Message)" }
+            Write-Host "Test"
+#            try { Disable-Bluetooth } catch { "Error during BitLocker Disable Procedure... $($_.Exception.Message)" }
+#            try { Disable-Bluetooth } catch { "Error during Bluetooth Disable Procedure... $($_.Exception.Message)" }
 #            try { Copy-Item -Path "$PSScriptRoot\03.-Shared\Shared" -Destination D:\ -Recurse -Force } catch { "$($_.Exception.Message)" }
 #            try {
 #                Copy-Item -Path "$PSScriptRoot\01-SWBase\CheckList Gruas.url" -Destination C:\Users\Public\Desktop
