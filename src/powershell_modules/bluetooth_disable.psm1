@@ -4,6 +4,7 @@ function Disable-Bluetooth {
   $state = Get-WmiObject -Class Win32_BluetoothRadio -Namespace root\cimv2\wirelesslan
 
   # Verifica si el Bluetooth está activado
+
   if ($state.Enabled) {
     # Desactiva el Bluetooth
     $state.Enabled = $false

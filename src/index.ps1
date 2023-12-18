@@ -1,15 +1,20 @@
 
-# Import-Module .\powershell_modules\ui.psm1
+Import-Module .\powershell_modules\authentication.psm1
 Import-Module .\powershell_modules\bluetooth_disable.psm1
 Import-Module .\powershell_modules\bitlocker_disable.psm1
 Import-Module .\powershell_modules\language_config.psm1
 
 # Programa de Instalación
 
-# [string]$sourceDirectory = "\\tnsafs02.tenaris.techint.net\Packages\Global Applications\MS_Infopath_2013"
-# [string]$destionationDirectory = "D:\Shared\"
-#
-# Copy-Item -Force -Recurse -Verbose $sourceDirectory -Destination $destinationDirectory
+do{
+  [string]$entryPoint = Authentication
+}until($entryPoint -eq 'Authentication True')
+
+sleep 2000
+
+
+
+
 
 $List = "Software Center Check", "Config Sequence", "Exit"
  
@@ -86,13 +91,11 @@ do {
   $os = Get-WmiObject -Class Win32_ComputerSystem | Select-Object -Property Manufacturer 
   switch ($selection) {
     'Config Sequence' {
+
+      # Autenticación de Credenciales
       
-      <# 
-        BitLocker Disable Sequence
-        Bluetooth Disable Sequence
-        Shared Folder
-        Desktop Links
-      #>
+      # Folder Shared
+      New-Item -Path D:\ -ItemType Directory -Name Shared
 
       try { Disable-Bluetooth } catch { "Error during Bluetooth Disable Procedure... $($_.Exception.Message)" }
       try { Disable-BitLocker } catch { "Error during BitLocker Disable Procedure... $($_.Exception.Message)" }
@@ -103,6 +106,7 @@ do {
 
       Set-Location "D:\Shared\AutoDesk_DWG2020"
       try { Start-Process -FilePath "Setup.exe" -ArgumentList "/Q /W /I setup.ini" -Wait } catch { "Error during AutoDesk_DWG2020 Installation Procedure" }
+
       Set-Location "D:\Shared\"
       Remove-Item -Path "D:\Shared\AutoDesk_DWG2020" -Force -Recurse
 
@@ -111,7 +115,6 @@ do {
       Copy-Item -Force -Recurse -Verbose $sourceDirectory -Destination $destinationDirectory
 
       Set-Location "D:\Shared\"
-
 
       # try { Copy-Item -Path "$PSScriptRoot\03.-Shared\Shared" -Destination D:\ -Recurse -Force } catch { "$($_.Exception.Message)" }
 #            try {
