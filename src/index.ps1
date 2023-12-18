@@ -1,11 +1,11 @@
 
 # Modules
 
-Import-Module .\powershell_modules\authentication.psm1
-Import-Module .\powershell_modules\UI
-Import-Module .\powershell_modules\bluetooth_disable.psm1
-Import-Module .\powershell_modules\bitlocker_disable.psm1
-Import-Module .\powershell_modules\language_config.psm1
+Import-Module (Resolve-Path('.\powershell_modules\authentication.psm1'))
+Import-Module (Resolve-Path('.\powershell_modules\UI.psm1'))
+Import-Module (Resolve-Path('.\powershell_modules\bluetooth_disable.psm1'))
+Import-Module (Resolve-Path('.\powershell_modules\bitlocker_disable.psm1'))
+Import-Module (Resolve-Path('.\powershell_modules\language_config.psm1'))
 
 # Installation
 
@@ -14,6 +14,7 @@ Import-Module .\powershell_modules\language_config.psm1
 
 do {
     [string]$entryPoint = Authentication
+    Start-Sleep 2000
 }until($entryPoint -eq 'Authentication True')
 
 # If there is no access task sequence does not start
