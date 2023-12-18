@@ -6,42 +6,47 @@
 #
 # Copy-Item -Force -Recurse -Verbose $sourceDirectory -Destination $destinationDirectory
 
-Write-Host "Test"
-pause
-
-
-$List = "Software Center Check", "Config Sequence", "Exit"
-
+<# Title: PowerShell Menu Template | Author: Michael Casey | Date: July 3rd, 2019 | Website: https://michael-casey.com/ #>
+ 
+#Sample list data to populate menu:
+#Set $List to any array to populate the menu with custom options
+$List = Get-ChildItem -Path C:\ -Name
+ 
+#menu offset to allow space to write a message above the menu
 $xmin = 3
 $ymin = 3
-
+ 
 #Write Menu
 Clear-Host
 Write-Host ""
-Write-Host " Use the up / down arrow to navigate and Enter to make a selection "
+Write-Host "  Use the up / down arrow to navigate and Enter to make a selection"
 [Console]::SetCursorPosition(0, $ymin)
-for each($name in $List){
-  for($i = 0; $i -lt $xmin; $i++){
-    Write-Host " " -NoNewLine
-  }
-  Write-Host " " -NoNewLine
+foreach ($name in $List) {
+    for ($i = 0; $i -lt $xmin; $i++) {
+        Write-Host " " -NoNewline
+    }
+    Write-Host "   " + $name
 }
-
-function Write-Highlighted{
-  [Console]::SetCursorPosition(1 + $xmin, $cursorY + $ymin)
-  Write-Host ">" -BackgroundColor Yellow -ForegroundColor Black -NoNewLine
-  Write-Host " " + $List[$cursorY] -BackgroundColor Yellow -ForegroundColor Black
-  [Console]::SetCursorPosition(0, $cursorY + $ymin)
+ 
+#Highlights the selected line
+function Write-Highlighted {
+ 
+    [Console]::SetCursorPosition(1 + $xmin, $cursorY + $ymin)
+    Write-Host ">" -BackgroundColor Yellow -ForegroundColor Black -NoNewline
+    Write-Host " " + $List[$cursorY] -BackgroundColor Yellow -ForegroundColor Black
+    [Console]::SetCursorPosition(0, $cursorY + $ymin)     
 }
-
-function Write-Normal{
-  [Console]::SetCursorPosition(1 + $xmin, $cursorY + $ymin)
-  Write-Host " " + $List[$cursorY]
+ 
+#Undoes highlight
+function Write-Normal {
+    [Console]::SetCursorPosition(1 + $xmin, $cursorY + $ymin)
+    Write-Host "  " + $List[$cursorY]  
 }
-
+ 
+#highlight first item by default
 $cursorY = 0
 Write-Highlighted
-
+ 
 $selection = ""
 $menu_active = $true
 while ($menu_active) {
@@ -73,21 +78,10 @@ while ($menu_active) {
     }
     Start-Sleep -Milliseconds 5 #Prevents CPU usage from spiking while looping
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
+Clear-Host
+Write-Host $selection
+#May use switch statement here to process menu selection
 
 
 # $parent_dir = Split-Path $MyInvocation.MyCommand.Path
