@@ -6,6 +6,10 @@
 #
 # Copy-Item -Force -Recurse -Verbose $sourceDirectory -Destination $destinationDirectory
 
+Write-Host "Test"
+pause
+
+
 $List = "Software Center Check", "Config Sequence", "Exit"
 
 $xmin = 3
