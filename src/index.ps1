@@ -6,11 +6,7 @@
 #
 # Copy-Item -Force -Recurse -Verbose $sourceDirectory -Destination $destinationDirectory
 
-<# Title: PowerShell Menu Template | Author: Michael Casey | Date: July 3rd, 2019 | Website: https://michael-casey.com/ #>
- 
-#Sample list data to populate menu:
-#Set $List to any array to populate the menu with custom options
-$List = Get-ChildItem -Path C:\ -Name
+$List = "Software Center Check", "Config Sequence", "Exit"
  
 #menu offset to allow space to write a message above the menu
 $xmin = 3
