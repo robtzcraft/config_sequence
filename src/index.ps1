@@ -1,4 +1,9 @@
 
+# Import-Module .\powershell_modules\ui.psm1
+Import-Module .\powershell_modules\bluetooth_disable.psm1
+Import-Module .\powershell_modules\bitlocker_disable.psm1
+Import-Module .\powershell_modules\language_config.psm1
+
 # Programa de Instalación
 
 # [string]$sourceDirectory = "\\tnsafs02.tenaris.techint.net\Packages\Global Applications\MS_Infopath_2013"
@@ -56,8 +61,7 @@ while ($menu_active) {
                 if ($cursorY -gt 0) {
                     $cursorY = $cursorY - 1
                 }
-            }
- 
+            } 
             40 {
                 #up key
                 if ($cursorY -lt $List.Length - 1) {
@@ -74,55 +78,42 @@ while ($menu_active) {
     }
     Start-Sleep -Milliseconds 5 #Prevents CPU usage from spiking while looping
 }
- 
+
 Clear-Host
-Write-Host $selection
-#May use switch statement here to process menu selection
-
-
-# $parent_dir = Split-Path $MyInvocation.MyCommand.Path
-
-#Import-Module .\powershell_modules\ui.psm1
-#Import-Module .\powershell_modules\bluetooth_disable.psm1
-#Import-Module .\powershell_modules\bitlocker_disable.psm1
-#Import-Module .\powershell_modules\language_config.psm1
-
-function Show-Menu {
-    param (
-        [string]$Title = 'Installer'
-    )
-    Clear-Host
-    Write-Host "================ $Title ================"
-
-    Write-Host "
-#####################################################
-#                                                   #
-#           Installation System - Tenaris           #
-#           Author: @robtzcraft                     #
-#           Version: 0.0.5 (alpha)                  #
-#                                                   #
-#####################################################
-    "
-
-}
 
 do {
-    $PSScriptRoot = Split-Path -Path $MyInvocation.MyCommand.Path
-    $os = Get-WmiObject -Class Win32_ComputerSystem | Select-Object -Property Manufacturer 
-    switch ($selection) {
-        'Config Sequence' {
-                 
-            <# 
-                BitLocker Disable Sequence
-                Bluetooth Disable Sequence
-                Shared Folder
-                Desktop Links
-            #>
-#            Test
-            Write-Host "Test"
-#            try { Disable-Bluetooth } catch { "Error during BitLocker Disable Procedure... $($_.Exception.Message)" }
-#            try { Disable-Bluetooth } catch { "Error during Bluetooth Disable Procedure... $($_.Exception.Message)" }
-#            try { Copy-Item -Path "$PSScriptRoot\03.-Shared\Shared" -Destination D:\ -Recurse -Force } catch { "$($_.Exception.Message)" }
+  $PSScriptRoot = Split-Path -Path $MyInvocation.MyCommand.Path
+  $os = Get-WmiObject -Class Win32_ComputerSystem | Select-Object -Property Manufacturer 
+  switch ($selection) {
+    'Config Sequence' {
+      
+      <# 
+        BitLocker Disable Sequence
+        Bluetooth Disable Sequence
+        Shared Folder
+        Desktop Links
+      #>
+
+      try { Disable-Bluetooth } catch { "Error during Bluetooth Disable Procedure... $($_.Exception.Message)" }
+      try { Disable-BitLocker } catch { "Error during BitLocker Disable Procedure... $($_.Exception.Message)" }
+
+      [string]$sourceDirectory = "\\tnsafs02.tenaris.techint.net\Packages\Global Applications\AutoDesk_DWG2020"
+      [string]$destionationDirectory = "D:\Shared\"
+      Copy-Item -Force -Recurse -Verbose $sourceDirectory -Destination $destinationDirectory
+
+      Set-Location "D:\Shared\AutoDesk_DWG2020"
+      try { Start-Process -FilePath "Setup.exe" -ArgumentList "/Q /W /I setup.ini" -Wait } catch { "Error during AutoDesk_DWG2020 Installation Procedure" }
+      Set-Location "D:\Shared\"
+      Remove-Item -Path "D:\Shared\AutoDesk_DWG2020" -Force -Recurse
+
+      [string]$sourceDirectory = "\\tnsafs02.tenaris.techint.net\Packages\Global Applications\Google_Chrome_x64_105.0.5195.102"
+      [string]$destionationDirectory = "D:\Shared\"
+      Copy-Item -Force -Recurse -Verbose $sourceDirectory -Destination $destinationDirectory
+
+      Set-Location "D:\Shared\"
+
+
+      # try { Copy-Item -Path "$PSScriptRoot\03.-Shared\Shared" -Destination D:\ -Recurse -Force } catch { "$($_.Exception.Message)" }
 #            try {
 #                Copy-Item -Path "$PSScriptRoot\01-SWBase\CheckList Gruas.url" -Destination C:\Users\Public\Desktop
 #                Copy-Item -Path "$PSScriptRoot\01-SWBase\Tenaris Shop Floor.url" -Destination C:\Users\Public\Desktop
@@ -134,7 +125,6 @@ do {
 #
 #            <# Application Installation Sequence #>
 #            Start-Process "$PSScriptRoot\02-Install\01-Administrador de impresora\admin impresora.bat" -Wait
-#            Start-Process "$PSScriptRoot\02-Install\03-AutoDesk_DWG2021\Setup.exe" -Wait
 #            Start-Process "$PSScriptRoot\02-Install\04-Chrome\ChromeSetup.exe" -Wait
 #            if ($os -like "*Dell Inc.*") {
 #                Start-Process "$PSScriptRoot\02-Install\05-Dell-Command-Update\Dell-Command-Update-Application_714J9_WIN_4.8.0_A00.EXE" -Wait
