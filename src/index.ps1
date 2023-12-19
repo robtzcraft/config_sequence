@@ -1,38 +1,36 @@
 
-# Modules
+# Relative Path
+$powershellModulesDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
-Import-Module (Resolve-Path('.\powershell_modules\authentication.psm1'))
-Import-Module (Resolve-Path('.\powershell_modules\UI.psm1'))
-Import-Module (Resolve-Path('.\powershell_modules\bluetooth_disable.psm1'))
-Import-Module (Resolve-Path('.\powershell_modules\bitlocker_disable.psm1'))
-Import-Module (Resolve-Path('.\powershell_modules\language_config.psm1'))
+# Modules
+Import-Module $powershellModulesDir\.\powershell_modules\authentication.psm1
+Import-Module $powershellModulesDir\.\powershell_modules\UI.psm1
+Import-Module $powershellModulesDir\.\powershell_modules\bluetooth_disable.psm1
+Import-Module $powershellModulesDir\.\powershell_modules\bitlocker_disable.psm1
+Import-Module $powershellModulesDir\.\powershell_modules\language_config.psm1
 
 # Installation
 
 # User Authentication:
 # Network ID to access to \\tnsafs02.tenaris.techint.net
 
+[string]$entryPoint
 do {
-    [string]$entryPoint = Authentication
-    Start-Sleep 2000
+    $entryPoint = Authentication
+    Pause
 }until($entryPoint -eq 'Authentication True')
-
 # If there is no access task sequence does not start
-Start-Sleep 2000
 
 do {
-
     [string]$optionMenuSelected = UI_menu
 
-    # $PSScriptRoot = Split-Path -Path $MyInvocation.MyCommand.Path
-    # $os = Get-WmiObject -Class Win32_ComputerSystem | Select-Object -Property Manufacturer 
+    # $os = Get-WmiObject -Class Win32_ComputerSystem | Select-Object -Property Manufacturer
     switch ($optionMenuSelected) {
         'Config Sequence' {
 
             Write-Host "Test config sequence"
-            Start-Sleep 2000
+            Pause
             # Autenticación de Credenciales
-      
             # Folder Shared
             New-Item -Path D:\ -ItemType Directory -Name Shared
 
@@ -40,7 +38,7 @@ do {
             try { Disable-BitLocker } catch { "Error during BitLocker Disable Procedure... $($_.Exception.Message)" }
 
             [string]$sourceDirectory = "\\tnsafs02.tenaris.techint.net\Packages\Global Applications\AutoDesk_DWG2020"
-            [string]$destionationDirectory = "D:\Shared\"
+            [string]$destinationDirectory = "D:\Shared\"
             Copy-Item -Force -Recurse -Verbose $sourceDirectory -Destination $destinationDirectory
 
             Set-Location "D:\Shared\AutoDesk_DWG2020"
@@ -49,11 +47,12 @@ do {
             Set-Location "D:\Shared\"
             Remove-Item -Path "D:\Shared\AutoDesk_DWG2020" -Force -Recurse
 
-            [string]$sourceDirectory = "\\tnsafs02.tenaris.techint.net\Packages\Global Applications\Google_Chrome_x64_105.0.5195.102"
-            [string]$destionationDirectory = "D:\Shared\"
-            Copy-Item -Force -Recurse -Verbose $sourceDirectory -Destination $destinationDirectory
+            #[string]$sourceDirectory = "\\tnsafs02.tenaris.techint.net\Packages\Global Applications\Google_Chrome_x64_105.0.5195.102"
+            #[string]$destionationDirectory = "D:\Shared\"
+            #Copy-Item -Force -Recurse -Verbose $sourceDirectory -Destination $destinationDirectory
 
-            Set-Location "D:\Shared\"
+            #Set-Location "D:\Shared\"
+            #try { Start-Process -FilePath "Setup.exe" -ArgumentList "/Q /W /I setup.ini" -Wait } catch { "Error during AutoDesk_DWG2020 Installation Procedure" }
 
             # try { Copy-Item -Path "$PSScriptRoot\03.-Shared\Shared" -Destination D:\ -Recurse -Force } catch { "$($_.Exception.Message)" }
             #            try {
@@ -95,7 +94,7 @@ do {
         'sc_check' {
             Write-Host "Software Center Repair Sequence..."
             do {
-                Start-Process 'C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Microsoft Endpoint Manager\Configuration Manager\Software Center.lnk' -Wait
+                Start-Process 'C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Microsoft Configuration Manager\Configuration Manager\Software Center.lnk' -Wait
                 $repairInput = Read-Host "Repair [y/n]"
                 if ($repairInput -eq 'y') {
                     Start-Process 'C:\Windows\CCM\ccmrepair.exe' -Wait
