@@ -1,21 +1,17 @@
 
 function Disable-Bluetooth {
-  # Obtiene el estado actual del Bluetooth
-  $state = Get-WmiObject -Class Win32_BluetoothRadio -Namespace root\cimv2\wirelesslan
+    # Obtén el adaptador de red Bluetooth
+    $bluetoothAdapter = Get-PnpDevice | Where-Object { $_.FriendlyName -like "*Bluetooth*" }
 
-  # Verifica si el Bluetooth está activado
-
-  if ($state.Enabled) {
-    # Desactiva el Bluetooth
-    $state.Enabled = $false
-    $state.SetProperty()
-
-    # Imprime un mensaje de confirmación
-    Write-Host "El Bluetooth se ha deshabilitado."
-  } else {
-    # Imprime un mensaje de advertencia
-    Write-Host "El Bluetooth ya está deshabilitado."
-  }
+    # Verifica si el adaptador de red Bluetooth está activo
+    if ($bluetoothAdapter.Status -eq "OK") {
+        # Si está activo, deshabilita el adaptador de red Bluetooth
+        Disable-PnpDevice -InstanceId $bluetoothAdapter.InstanceId -Confirm:$false
+        Write-Output "Bluetooth: Inactive"
+    }
+    else {
+        Write-Output "Bluetooth: Inactive"
+    }
 }
 
 Export-ModuleMember -Function Disable-Bluetooth
