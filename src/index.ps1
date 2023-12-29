@@ -47,7 +47,7 @@ do {
             } catch { "Error during AutoDesk_DWG2020 Installation Procedure" }
             try {
                 Write-Host "Google Chrome Installation Procedure Started..."
-                Start-Process -FilePath "$rootPath\..\installation_folder\04-Chrome\GoogleChromeStandaloneEnterprise64.msi" -ArgumentList 'msiexec /i "GoogleChromeStandaloneEnteprise64.msi /q"' -Wait 
+                Start-Process -FilePath "$rootPath\..\installation_folder\04-Chrome\ChromeSetup.exe" -ArgumentList '/silent /install' -Wait 
             } catch { "Error during Google Chrome Installation Procedure" }
             try { 
                 Write-Host "SAP (SP8) Installation Procedure Procedure Started..."
@@ -66,8 +66,8 @@ do {
             Get-WinHomeLocation
             
             if ($os -like "*Dell Inc.*") {
-                try { Start-Process -FilePath "$rootPath\..\installation_folder\05-Dell-Command-Update\Dell-Command-Update-Application_44TH5_WIN_5.1.0_A00.EXE" -ArgumentList "Dell-Command-Update-Application_44TH5_WIN_5.1.0_A00.EXE /factoryinstall /s" -Wait } catch { "Error during Dell Command Update Installation Procedure" }
-                Start-Sleep 120
+                try { Start-Process -FilePath "$rootPath\..\installation_folder\05-Dell-Command-Update\Dell-Command-Update-Application_44TH5_WIN_5.1.0_A00.EXE" -ArgumentList "/factoryinstall /s" -Wait } catch { "Error during Dell Command Update Installation Procedure" }
+                Start-Sleep 10
                 Start-Process "C:\Program Files (x86)\Dell\CommandUpdate\DellCommandUpdate.exe" -Wait
             }
             
