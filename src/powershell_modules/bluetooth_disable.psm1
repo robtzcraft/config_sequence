@@ -9,6 +9,15 @@ function Disable-Bluetooth {
         $device.Put()
     }
 
+
+# PnpDevice Error - Dispositivos no pueden activar objeto Bluetooth:
+#   Error: PnpDevice - Desactivación automática... Error desconocido...
+#   $bluetooth.Status -eq "OK"
+#
+#   Test de replicación:
+#                   R-02 [ sucessfull ]
+#                   R-03 [ fixed ]
+#
     # Obtén el adaptador de red Bluetooth
 #    $bluetoothAdapter = Get-PnpDevice | Where-Object { $_.FriendlyName -like "*Bluetooth*" }
 
@@ -20,7 +29,9 @@ function Disable-Bluetooth {
 #    }
 #    else {
 #        Write-Output "Bluetooth: Inactive"
+#        try {
+#           Enable-PnpDevice -InstanceId $bluetoothAdapter.InstanceId -Confirm:$false
+#        } catch { "Error PnpDevice activation" }
 #    }
-#
 
 Export-ModuleMember -Function Disable-Bluetooth
