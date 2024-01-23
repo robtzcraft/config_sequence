@@ -3,13 +3,13 @@ function Authentication {
 
   Clear-Host
   Write-Host ""
-  Write-Host " Please Add Credentials "
+  Write-Host "Please Add Credentials"
   [string]$networkID = Read-Host "Network ID (600XXXXX / 18XXXXXXX)"
-  [string]$networkIDPassword = Read-Host "Password: ", Password
+  [string]$networkIDPassword = Read-Host "Password" -AsSecureString
 
   try {
     net use \\tnsafs02.tenaris.techint.net\Packages /user:$networkID $networkIDPassword
-    cd \\tnsafs02.tenaris.techint.net\Packages\
+    Set-Location \\tnsafs02.tenaris.techint.net\Packages\
     Write-Host "Authentication Succesfull... Welcome $networkID"
     Write-Host " "
     Write-Host " "
